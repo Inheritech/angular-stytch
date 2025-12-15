@@ -46,9 +46,11 @@ export class Authenticate implements OnInit {
       
       this.authService.updateAuthStatus(true);
       this.router.navigate(['/dashboard']);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Authentication error:', error);
-      this.error = error?.message || 'Authentication failed. Please try again.';
+      this.error = error instanceof Error 
+        ? error.message 
+        : 'Authentication failed. Please try again.';
       this.isLoading = false;
     }
   }
