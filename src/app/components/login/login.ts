@@ -32,15 +32,26 @@ export class Login implements OnInit, AfterViewInit {
 
     const callbacks = {
       onEvent: (message: any) => {
-        console.log('Stytch event:', message);
+        console.group('📊 Stytch Event');
+        console.log('Type:', message.type);
+        console.log('Data:', message.data);
+        console.log('Full Message:', message);
+        console.groupEnd();
       },
       onSuccess: (message: any) => {
-        console.log('Stytch success:', message);
+        console.group('✅ Stytch Authentication Success');
+        console.log('Message:', message);
+        console.log('User authenticated successfully');
+        console.groupEnd();
         this.authService.updateAuthStatus(true);
         this.router.navigate(['/dashboard']);
       },
       onError: (message: any) => {
-        console.error('Stytch error:', message);
+        console.group('❌ Stytch Authentication Error');
+        console.error('Error Type:', message.type);
+        console.error('Error Message:', message.message);
+        console.error('Full Error:', message);
+        console.groupEnd();
       }
     };
 

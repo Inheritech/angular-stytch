@@ -34,6 +34,42 @@
         </div>
       </div>
 
+      <div class="debug-card">
+        <h3>🐛 Debug Information</h3>
+        <p class="debug-note">
+          Use the sections below to view detailed user and session data. 
+          All information is also logged to the browser console.
+        </p>
+
+        <div class="debug-section">
+          <button class="debug-toggle" (click)="toggleUserDataJson()">
+            <span class="toggle-icon">{{ showUserDataJson ? '▼' : '▶' }}</span>
+            Full User Object (JSON)
+          </button>
+          @if (showUserDataJson) {
+            <div class="json-viewer">
+              <pre>{{ getUserJson() }}</pre>
+            </div>
+          }
+        </div>
+
+        <div class="debug-section">
+          <button class="debug-toggle" (click)="toggleSessionInfo()">
+            <span class="toggle-icon">{{ showSessionInfo ? '▼' : '▶' }}</span>
+            Session Information (JSON)
+          </button>
+          @if (showSessionInfo) {
+            <div class="json-viewer">
+              <pre>{{ getSessionJson() }}</pre>
+            </div>
+          }
+        </div>
+
+        <div class="session-expiry">
+          <strong>Session Expires:</strong> {{ getSessionExpiry() }}
+        </div>
+      </div>
+
       <div class="info-card">
         <h3>About This Application</h3>
         <p>

@@ -47,7 +47,8 @@
 
 .welcome-card,
 .user-info-card,
-.info-card {
+.info-card,
+.debug-card {
   background: white;
   border-radius: 12px;
   padding: 30px;
@@ -69,11 +70,82 @@
 }
 
 .user-info-card h3,
-.info-card h3 {
+.info-card h3,
+.debug-card h3 {
   margin: 0 0 20px 0;
   color: #1a1a1a;
   font-size: 20px;
   font-weight: 600;
+}
+
+.debug-note {
+  margin: 0 0 20px 0;
+  padding: 12px;
+  background: #f0f7ff;
+  border-left: 4px solid #667eea;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.debug-section {
+  margin-bottom: 15px;
+}
+
+.debug-toggle {
+  width: 100%;
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.debug-toggle:hover {
+  background: #ebebeb;
+  border-color: #d0d0d0;
+}
+
+.toggle-icon {
+  font-size: 12px;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.json-viewer {
+  margin-top: 10px;
+  background: #1e1e1e;
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.json-viewer pre {
+  margin: 0;
+  color: #d4d4d4;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.session-expiry {
+  margin-top: 20px;
+  padding: 12px;
+  background: #fff9e6;
+  border-left: 4px solid #ffc107;
+  color: #333;
+  font-size: 14px;
+  border-radius: 4px;
 }
 
 .info-grid {
