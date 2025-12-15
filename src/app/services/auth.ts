@@ -26,37 +26,6 @@ export class Auth {
     }
   }
 
-  async sendMagicLink(email: string): Promise<void> {
-    await this.stytch.magicLinks.email.loginOrCreate({
-      email,
-      login_magic_link_url: `${window.location.origin}/authenticate`,
-      signup_magic_link_url: `${window.location.origin}/authenticate`,
-    });
-  }
-
-  async authenticateToken(token: string): Promise<void> {
-    await this.stytch.magicLinks.authenticate({
-      magic_links_token: token,
-      session_duration_minutes: 60,
-    });
-    this.isAuthenticatedSubject.next(true);
-  }
-
-  async startOAuth(provider: 'google' | 'microsoft'): Promise<void> {
-    await this.stytch.oauth[provider].start({
-      login_redirect_url: `${window.location.origin}/authenticate`,
-      signup_redirect_url: `${window.location.origin}/authenticate`,
-    });
-  }
-
-  async authenticateOAuth(token: string): Promise<void> {
-    await this.stytch.oauth.authenticate({
-      oauth_token: token,
-      session_duration_minutes: 60,
-    });
-    this.isAuthenticatedSubject.next(true);
-  }
-
   async logout(): Promise<void> {
     await this.stytch.session.revoke();
     this.isAuthenticatedSubject.next(false);
@@ -72,5 +41,9 @@ export class Auth {
 
   getStytchClient(): StytchUIClient {
     return this.stytch;
+  }
+
+  updateAuthStatus(isAuthenticated: boolean): void {
+    this.isAuthenticatedSubject.next(isAuthenticated);
   }
 }

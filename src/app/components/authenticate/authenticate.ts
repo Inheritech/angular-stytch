@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-authenticate',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './authenticate.html',
   styleUrl: './authenticate.css',
 })
@@ -30,11 +30,21 @@ export class Authenticate implements OnInit {
     }
 
     try {
+      const stytchClient = this.authService.getStytchClient();
+      
       if (stytch_token_type === 'oauth') {
-        await this.authService.authenticateOAuth(token);
+        // Handle OAuth authentication
+        await stytchClient.oauth.authenticate(token, {
+          session_duration_minutes: 60,
+        });
       } else {
-        await this.authService.authenticateToken(token);
+        // Handle Magic Link authentication
+        await stytchClient.magicLinks.authenticate(token, {
+          session_duration_minutes: 60,
+        });
       }
+      
+      this.authService.updateAuthStatus(true);
       this.router.navigate(['/dashboard']);
     } catch (error: any) {
       console.error('Authentication error:', error);

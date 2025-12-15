@@ -1,75 +1,79 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
+import { Products } from '@stytch/vanilla-js';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
-  email = '';
-  isLoading = false;
-  message = '';
-  messageType: 'success' | 'error' | '' = '';
-
+export class Login implements OnInit, AfterViewInit {
   constructor(
     private authService: Auth,
     private router: Router
   ) {}
 
-  async sendMagicLink() {
-    if (!this.email) {
-      this.showMessage('Please enter your email', 'error');
-      return;
-    }
-
-    this.isLoading = true;
-    this.message = '';
-
-    try {
-      await this.authService.sendMagicLink(this.email);
-      this.showMessage('Magic link sent! Check your email.', 'success');
-      this.email = '';
-    } catch (error) {
-      console.error('Error sending magic link:', error);
-      this.showMessage('Failed to send magic link. Please try again.', 'error');
-    } finally {
-      this.isLoading = false;
+  ngOnInit() {
+    // Check if already authenticated
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
     }
   }
 
-  async loginWithGoogle() {
-    this.isLoading = true;
-    try {
-      await this.authService.startOAuth('google');
-    } catch (error) {
-      console.error('Error with Google login:', error);
-      this.showMessage('Failed to login with Google. Please try again.', 'error');
-      this.isLoading = false;
-    }
+  ngAfterViewInit() {
+    this.initializeStytchUI();
   }
 
-  async loginWithMicrosoft() {
-    this.isLoading = true;
-    try {
-      await this.authService.startOAuth('microsoft');
-    } catch (error) {
-      console.error('Error with Microsoft login:', error);
-      this.showMessage('Failed to login with Microsoft. Please try again.', 'error');
-      this.isLoading = false;
-    }
-  }
+  private initializeStytchUI() {
+    const stytchClient = this.authService.getStytchClient();
 
-  private showMessage(text: string, type: 'success' | 'error') {
-    this.message = text;
-    this.messageType = type;
-    setTimeout(() => {
-      this.message = '';
-      this.messageType = '';
-    }, 5000);
+    const callbacks = {
+      onEvent: (message: any) => {
+        console.log('Stytch event:', message);
+      },
+      onSuccess: (message: any) => {
+        console.log('Stytch success:', message);
+        this.authService.updateAuthStatus(true);
+        this.router.navigate(['/dashboard']);
+      },
+      onError: (message: any) => {
+        console.error('Stytch error:', message);
+      }
+    };
+
+    // Mount the Stytch login UI with email magic links and OAuth
+    stytchClient.mountLogin({
+      elementId: 'stytch-container',
+      config: {
+        products: [Products.emailMagicLinks, Products.oauth],
+        emailMagicLinksOptions: {
+          loginRedirectURL: `${window.location.origin}/authenticate`,
+          loginExpirationMinutes: 60,
+          signupRedirectURL: `${window.location.origin}/authenticate`,
+          signupExpirationMinutes: 60,
+        },
+        oauthOptions: {
+          providers: [
+            { type: 'google' },
+            { type: 'microsoft' }
+          ],
+          loginRedirectURL: `${window.location.origin}/authenticate`,
+          signupRedirectURL: `${window.location.origin}/authenticate`,
+        }
+      },
+      styles: {
+        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+        container: {
+          width: '100%',
+        },
+        colors: {
+          primary: '#667eea',
+        }
+      },
+      callbacks,
+    });
   }
 }
