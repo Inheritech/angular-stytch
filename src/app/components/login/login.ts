@@ -46,7 +46,7 @@ export class Login implements OnInit, AfterViewInit {
 
     // Mount the Stytch login UI with email magic links and OAuth
     stytchClient.mountLogin({
-      elementId: 'stytch-container',
+      elementId: '#stytch-container',
       config: {
         products: [Products.emailMagicLinks, Products.oauth],
         emailMagicLinksOptions: {
