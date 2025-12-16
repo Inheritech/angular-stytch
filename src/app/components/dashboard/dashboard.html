@@ -1,0 +1,92 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <button class="btn-logout" (click)="logout()">Logout</button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading user data...</p>
+    </div>
+  } @else {
+    <div class="dashboard-content">
+      <div class="welcome-card">
+        <h2>Welcome, {{ getUserName() }}! 👋</h2>
+        <p>You are successfully authenticated with Stytch.</p>
+      </div>
+
+      <div class="user-info-card">
+        <h3>User Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">User ID:</span>
+            <span class="value">{{ getUserId() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ getUserEmail() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Authentication Method:</span>
+            <span class="value">{{ getAuthMethod() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="debug-card">
+        <h3>🐛 Debug Information</h3>
+        <p class="debug-note">
+          Use the sections below to view detailed user and session data. 
+          All information is also logged to the browser console.
+        </p>
+
+        <div class="debug-section">
+          <button class="debug-toggle" (click)="toggleUserDataJson()">
+            <span class="toggle-icon">{{ showUserDataJson ? '▼' : '▶' }}</span>
+            Full User Object (JSON)
+          </button>
+          @if (showUserDataJson) {
+            <div class="json-viewer">
+              <pre>{{ getUserJson() }}</pre>
+            </div>
+          }
+        </div>
+
+        <div class="debug-section">
+          <button class="debug-toggle" (click)="toggleSessionInfo()">
+            <span class="toggle-icon">{{ showSessionInfo ? '▼' : '▶' }}</span>
+            Session Information (JSON)
+          </button>
+          @if (showSessionInfo) {
+            <div class="json-viewer">
+              <pre>{{ getSessionJson() }}</pre>
+            </div>
+          }
+        </div>
+
+        <div class="session-expiry">
+          <strong>Session Expires:</strong> {{ getSessionExpiry() }}
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>About This Application</h3>
+        <p>
+          This is a sample Angular application demonstrating Stytch Consumer authentication
+          with support for:
+        </p>
+        <ul>
+          <li>🔗 Magic Link authentication via email</li>
+          <li>🌐 Social login with Google and Microsoft</li>
+          <li>🔒 Secure session management</li>
+          <li>🛡️ Protected routes with authentication guards</li>
+        </ul>
+        <p>
+          All authentication flows are powered by Stytch's prebuilt UI components,
+          providing a seamless and secure authentication experience.
+        </p>
+      </div>
+    </div>
+  }
+</div>
